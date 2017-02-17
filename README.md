@@ -32,7 +32,7 @@ _Default: auth_
 USE auth;
 
 CREATE TABLE `users` (
-  `id` int(6) NOT NULL,
+  `id` int(6) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `uid` int(6) NOT NULL,

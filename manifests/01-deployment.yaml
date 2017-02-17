@@ -13,10 +13,26 @@ spec:
       containers:
       - name: authserver
         image: pasientskyhosting/kubernetes-authserver:latest
+        env:
+          - name: DB_HOST
+            value: "10.50.41.11"
+
+          - name: DB_PORT
+            value: "3306"
+
+          - name: DB_USER
+            value: "auth"
+
+          - name: DB_PASS
+            value: "bananskal"
+
+          - name: DB_NAME
+            value: "auth"
         ports:
-        - containerPort: 8087
-      - image: gcr.io/google_containers/addon-resizer:1.7
-        name: authserver-nanny
+          - containerPort: 8087
+
+      - name: authserver-nanny
+        image: gcr.io/google_containers/addon-resizer:1.7
         resources:
           limits:
             cpu: 50m
@@ -29,6 +45,7 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+
           - name: MY_POD_NAMESPACE
             valueFrom:
               fieldRef:

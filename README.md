@@ -3,9 +3,7 @@ Simple lightweigh & database backed authserver written in GOLANG to be used with
 
 More info about webhook token authentication [here](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
 
-##The following environment variables are used at startup
-
-
+##The following environment variables are availible at startup
 ###__DB_HOST__
 Mysql hostname
 _Default: 127.0.0.1_

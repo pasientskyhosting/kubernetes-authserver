@@ -1,0 +1,23 @@
+# This is the configuration file to be used with --authentication-token-webhook-config-file
+
+# clusters refers to the remote service.
+clusters:
+  - name: kubernetes-authserver
+    cluster:
+      certificate-authority: /path/to/ca.pem         # CA for verifying the remote service.
+      server: https://10.3.1.68:8088/auth # URL of remote service to query. Must use 'https'.
+
+# users refers to the API server's webhook configuration.
+users:
+  - name: kubernetes-authserver
+    user:
+      client-certificate: /path/to/cert.pem # cert for the webhook plugin to use
+      client-key: /path/to/key.pem          # key matching the cert
+
+# kubeconfig files require a context. Provide one for the API server.
+current-context: webhook
+contexts:
+- context:
+    cluster: kubernetes-authserver
+    user: kubernetes-authserver
+  name: webhook

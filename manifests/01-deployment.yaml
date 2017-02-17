@@ -10,6 +10,10 @@ spec:
       labels:
         app: authserver
     spec:
+      volumes:
+        - name: "authserver"
+          secret:
+            secretName: authserver
       containers:
       - name: authserver
         image: pasientskyhosting/kubernetes-authserver:latest
@@ -38,6 +42,9 @@ spec:
             value: "auth"
         ports:
           - containerPort: 8087
+        volumeMounts:
+          - mountPath: "/etc/ssl"
+            name: "authserver"
 
       - name: authserver-nanny
         image: gcr.io/google_containers/addon-resizer:1.7

@@ -4,7 +4,7 @@ metadata:
   name: kubernetes-authserver
   namespace: kube-system
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -13,6 +13,13 @@ spec:
       containers:
       - name: authserver
         image: pasientskyhosting/kubernetes-authserver:latest
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8087
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
         env:
           - name: DB_HOST
             value: "10.50.41.11"

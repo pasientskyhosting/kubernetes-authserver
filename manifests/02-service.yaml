@@ -6,7 +6,7 @@ metadata:
     # If you are NOT using this as an addon, you should comment out this line.
     # kubernetes.io/cluster-service: 'true'
     kubernetes.io/name: Authserver
-  name: Authserver
+  name: authserver
   namespace: kube-system
 spec:
   ports:

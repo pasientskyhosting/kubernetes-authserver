@@ -5,31 +5,27 @@ More info about webhook token authentication [here](https://kubernetes.io/docs/a
 
 ##The following environment variables are availible at startup
 ###__DB_HOST__
-Mysql hostname
+Mysql hostname  
 _Default: 127.0.0.1_
 
 ###__DB_PORT__
-Mysql port
+Mysql port  
 _Default: 3306_
 
 ###__DB_NAME__
-Mysql DB name
+Mysql DB name  
 _Default: auth_
 
 ###__DB_USER__
-Mysql username
+Mysql username  
 _Default: auth_
 
 ###__DB_PASS__
-Mysql password
+Mysql password  
 _Default: auth_
 
-
-
 ##Database preparation
-
-```
-CREATE DATABASE auth CHARACTER SET utf8 COLLATE utf8_general_ci;
+```CREATE DATABASE auth CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 USE auth;
 
@@ -43,25 +39,20 @@ CREATE TABLE `users` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `uid` (`uid`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-```
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;```
 
 ##JSON Requests & responses
-
 ###Unsuccessfull request response
-```
-{
+```{
   "apiVersion": "authentication.k8s.io/v1beta1",
   "kind": "TokenReview",
   "status": {
     "authenticated": false
   }
-}
-```
+}```
 
 ###Successfull response example
-```
-{
+```{
   "apiVersion": "authentication.k8s.io/v1beta1",
   "kind": "TokenReview",
   "status": {
@@ -75,13 +66,10 @@ CREATE TABLE `users` (
       ],
     }
   }
-}
-```
+}```
 
 ###Faulty request ( Json check failed )
-```
-{
+```{
   "status": "400",
   "details": "Invalid TokenReview ( Json decode failed )"
-}
-```
+}```

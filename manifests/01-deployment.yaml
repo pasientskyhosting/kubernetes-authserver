@@ -13,6 +13,7 @@ spec:
       containers:
       - name: authserver
         image: pasientskyhosting/kubernetes-authserver:latest
+        imagePullPolicy: Always
         readinessProbe:
           httpGet:
             path: /healthz

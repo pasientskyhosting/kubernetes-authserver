@@ -24,9 +24,9 @@ var routes = Routes{
 		Index,
 	},
 	Route{
-		"Index",
+		"Auth",
 		"POST",
-		"/",
+		"/auth",
 		Auth,
 	},
 	Route{

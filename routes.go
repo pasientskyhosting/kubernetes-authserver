@@ -19,8 +19,26 @@ var routes = Routes{
 	},
 	Route{
 		"Index",
+		"HEAD",
+		"/",
+		Index,
+	},
+	Route{
+		"Index",
 		"POST",
 		"/",
 		Auth,
+	},
+	Route{
+		"Helthz",
+		"GET",
+		"/healthz",
+		Healthz,
+	},
+	Route{
+		"Helthz",
+		"HEAD",
+		"/healthz",
+		Healthz,
 	},
 }

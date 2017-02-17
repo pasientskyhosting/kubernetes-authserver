@@ -10,12 +10,11 @@ import (
   _ "github.com/go-sql-driver/mysql"
 )
 
-const VERSION = "0.1-earlybird"
+const VERSION = "0.2-earlybird"
 
 var db *sql.DB 
 var err error
 var DB_DSN string
-
 
 func checkErr(err error) {
     if err != nil {
@@ -34,7 +33,6 @@ func init() {
     DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + *DB_PORT + ")/" + *DB_NAME + "?charset=utf8"
     log.Printf("DB DSN: %s:****@(%s:%s)/%s?charset=utf8", *DB_USER, *DB_HOST, *DB_PORT, *DB_NAME)
 }
- 
 
 func main() {
     db, err = sql.Open("mysql", DB_DSN)

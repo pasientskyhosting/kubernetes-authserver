@@ -3,26 +3,25 @@ Simple lightweigh & database backed authserver written in GOLANG to be used with
 
 More info about webhook token authentication [here](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
 
-How to setup Webhook authorization plugin [here](https://kubernetes.io/docs/admin/authorization)
 
 ##The following environment variables are used at startup
-####__DB_HOST__
+####_DB_HOST_
 Mysql hostname  
 _Default: 127.0.0.1_
 
-####__DB_PORT__
+####_DB_PORT_
 Mysql port  
 _Default: 3306_
 
-####__DB_NAME__
+####_DB_NAME_
 Mysql DB name  
 _Default: auth_
 
-####__DB_USER__
+####_DB_USER_
 Mysql username  
 _Default: auth_
 
-####__DB_PASS__
+####_DB_PASS_
 Mysql password  
 _Default: auth_
 

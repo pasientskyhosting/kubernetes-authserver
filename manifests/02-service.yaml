@@ -11,7 +11,11 @@ metadata:
 spec:
   ports:
   - port: 8087
+    name: http
     targetPort: 8087
+  - port: 8088
+    name: https
+    targetPort: 8088
   selector:
     app: authserver
   clusterIP: 10.3.0.15

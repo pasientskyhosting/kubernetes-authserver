@@ -21,7 +21,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	var r_id int
 	var r_token string
 	var r_username string
-	var r_uid int
+	var r_uid string
 	var r_groups string
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))

@@ -3,6 +3,15 @@ Simple lightweigh & database backed authserver written in GOLANG to be used with
 
 More info about webhook token authentication [here](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
 
+##Preparations
+
+*Generate SSL Certificates
+
+*Create TLS secret
+```
+kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key --namespace kube-system
+```
+
 
 ##The following environment variables are used at startup
 ####_DB_HOST_

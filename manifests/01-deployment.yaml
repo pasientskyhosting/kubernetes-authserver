@@ -27,7 +27,7 @@ spec:
           timeoutSeconds: 1
         env:
           - name: DB_HOST
-            value: "10.50.41.11"
+            value: "172.17.0.2"
 
           - name: DB_PORT
             value: "3306"
@@ -36,7 +36,7 @@ spec:
             value: "auth"
 
           - name: DB_PASS
-            value: "bananskal"
+            value: "auth"
 
           - name: DB_NAME
             value: "auth"

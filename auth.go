@@ -30,7 +30,7 @@ func invalidLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func loginSuccess(w http.ResponseWriter, r *http.Request, r_id int, r_username string, r_uid int, r_groups []string ) {
+func loginSuccess(w http.ResponseWriter, r *http.Request, r_id int, r_username string, r_uid string, r_groups []string ) {
 	response := &Auth_response_successfull{
 		APIVersion: "authentication.k8s.io/v1beta1",
 		Kind: "TokenReview",
@@ -38,7 +38,7 @@ func loginSuccess(w http.ResponseWriter, r *http.Request, r_id int, r_username s
 			Authenticated: true,
 			Userinfo: Userinfo{
 				Groups: r_groups,
-				UID: r_id,
+				UID: r_uid,
 				Username: r_username,
 			},
 		},

@@ -40,11 +40,11 @@ func init() {
 func Run(addr string, sslAddr string, ssl map[string]string) chan error {
 
     errs := make(chan error)
+    router := NewRouter()
 
     // Starting HTTP server
     go func() {
         log.Printf("Staring HTTP service on %s ...", addr)
-        router := NewRouter()
         if err := http.ListenAndServe(addr, router); err != nil {
             errs <- err
         }
@@ -54,8 +54,7 @@ func Run(addr string, sslAddr string, ssl map[string]string) chan error {
     // Starting HTTPS server
     go func() {
         log.Printf("Staring HTTPS service on %s ...", sslAddr)
-        router2 := NewRouter()
-        if err := http.ListenAndServeTLS(sslAddr, ssl["cert"], ssl["key"], router2); err != nil {
+        if err := http.ListenAndServeTLS(sslAddr, ssl["cert"], ssl["key"], router); err != nil {
             errs <- err
         }
     }()
@@ -69,15 +68,15 @@ func main() {
     checkErr(err)
     defer db.Close()
     checkErr(db.Ping())
-/*
+
 	router := NewRouter()
 
-    log.Fatal(http.ListenAndServe(":8087", router))
-    log.Fatal(http.ListenAndServeTLS(":8088", "/etc/ssl/authserver.pem", "/etc/ssl/authserver.key", router))
+//  log.Fatal(http.ListenAndServe(":8087", router))
+    log.Fatal(http.ListenAndServeTLS(":8088", "/etc/ssl/tls.crt", "/etc/ssl/tls.key", router))
 
 
-    http.HandleFunc("/", sampleHandler)
-*/
+//    http.HandleFunc("/", sampleHandler)
+/*
     errs := Run(":8087", ":8088", map[string]string{
         "cert": "/etc/ssl/tls.crt",
         "key":  "/etc/ssl/tls.key",
@@ -88,6 +87,6 @@ func main() {
     case err := <-errs:
         log.Printf("Could not start serving service due to (error: %s)", err)
     }
-
+*/
 
 }

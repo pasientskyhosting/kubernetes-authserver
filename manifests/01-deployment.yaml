@@ -27,7 +27,7 @@ spec:
           timeoutSeconds: 1
         env:
           - name: DB_HOST
-            value: "172.17.0.2"
+            value: "10.50.41.10"
 
           - name: DB_PORT
             value: "3306"
@@ -42,6 +42,7 @@ spec:
             value: "auth"
         ports:
           - containerPort: 8087
+          - containerPort: 8088
         volumeMounts:
           - mountPath: "/etc/ssl"
             name: "authserver"

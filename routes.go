@@ -30,13 +30,13 @@ var routes = Routes{
 		Auth,
 	},
 	Route{
-		"Helthz",
+		"Healthz",
 		"GET",
 		"/healthz",
 		Healthz,
 	},
 	Route{
-		"Helthz",
+		"Healthz",
 		"HEAD",
 		"/healthz",
 		Healthz,

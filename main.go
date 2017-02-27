@@ -15,7 +15,7 @@ const VERSION = "0.2-earlybird"
 var db *sql.DB 
 var err error
 var DB_DSN string
-var DEBUG_HEALTHZ int
+// var DEBUG_HEALTHZ int
 
 func checkErr(err error) {
     if err != nil {
@@ -30,10 +30,10 @@ func init() {
     var DB_NAME = flag.String("db", "auth", "Database name")
     var DB_USER = flag.String("user", "auth", "Database user")
     var DB_PASS = flag.String("pass", "auth", "Database user")
-    var DEBUG_HEALTHZ = flag.Int("debug_healthz", 0, "Enable logging of requests to /healthz")
+//    var DEBUG_HEALTHZ = flag.Int("debug_healthz", 0, "Enable logging of requests to /healthz")
     flag.Parse()
     DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + *DB_PORT + ")/" + *DB_NAME + "?charset=utf8"
-    DEBUG_HEALTHZ = DEBUG_HEALTHZ
+//    DEBUG_HEALTHZ = DEBUG_HEALTHZ
     log.Printf("DB DSN: %s:****@(%s:%s)/%s?charset=utf8", *DB_USER, *DB_HOST, *DB_PORT, *DB_NAME)
 }
 

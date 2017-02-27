@@ -12,7 +12,7 @@ func Logger(inner http.Handler, name string) http.Handler {
 
 		inner.ServeHTTP(w, r)
 
-		if name == "Healthz" &&  DEBUG_HEALTHZ == 1{
+		if r.RequestURI != "/healthz" {
 			log.Printf(
 				"%s\t%s\t%s\t%s\t%s",
 				r.Method,
@@ -21,15 +21,6 @@ func Logger(inner http.Handler, name string) http.Handler {
 				name,
 				time.Since(start),
 			)		
-		} else {
-			log.Printf(
-				"%s\t%s\t%s\t%s\t%s",
-				r.Method,
-				r.RequestURI,
-				r.RemoteAddr,
-				name,
-				time.Since(start),
-			)	
 		}
 
 	})

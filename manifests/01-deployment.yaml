@@ -27,7 +27,7 @@ spec:
           timeoutSeconds: 1
         env:
           - name: DB_HOST
-            value: "10.50.41.10"
+            value: "10.14.86.41"
 
           - name: DB_PORT
             value: "3306"

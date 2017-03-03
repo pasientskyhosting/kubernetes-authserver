@@ -3,3 +3,4 @@ ssl/*.pem
 ssl/*.srl
 ssl/*.req
 ssl/*.cnf
+ssl/old

@@ -20,7 +20,7 @@ func Logger(inner http.Handler, name string) http.Handler {
 				r.RemoteAddr,
 				name,
 				time.Since(start),
-			)		
+			)
 		}
 
 	})

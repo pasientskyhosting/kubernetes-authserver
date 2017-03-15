@@ -26,7 +26,7 @@ type AStatus struct {
 
 type Userinfo struct {
 	Username string   `json:"username"`
-	UID      string      `json:"uid"`
+	UID      string   `json:"uid"`
 	Groups   []string `json:"groups"`
 }
 

@@ -7,7 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	//"golang.org/x/crypto/scrypt"
+	"strings"
+	//"golang.org/x/crypto/bcrypt"
 	//"strings"
 	//	"github.com/gorilla/mux"
 )
@@ -38,7 +39,13 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println("Cannot reach database server!", err)
 		} else {
-			rows, err := db.Query("SELECT users.id, users.username, groups.groupname FROM (auth.groups_mapping groups_mapping INNER JOIN auth.groups groups ON (groups_mapping.groupid = groups.id)) INNER JOIN auth.users users ON (groups_mapping.userid = users.id) WHERE (users.token = ?)", token.Spec.Token)
+			s := strings.Split(token.Spec.Token, "$")
+			theSalt, actuallToken := s[0], s[1]
+			TokenToCheck := GetPassword(actuallToken, []byte(theSalt))
+			//log.Printf("Salt: %s", theSalt)
+			//log.Printf("Token: %s", actuallToken)
+			//log.Printf("Hashed Token: %x", TokenToCheck)
+			rows, err := db.Query("SELECT users.id, users.username, groups.groupname FROM (auth.groups_mapping groups_mapping INNER JOIN auth.groups groups ON (groups_mapping.groupid = groups.id)) INNER JOIN auth.users users ON (groups_mapping.userid = users.id) WHERE BINARY (users.token = ?)", TokenToCheck)
 			checkErr(err)
 			defer rows.Close()
 			//			err := db.QueryRow("SELECT id, token, username, groups FROM `users` where token = ? LIMIT 1",
@@ -59,7 +66,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 					r_groups = append(r_groups, groupname)
 					count += 1
 				}
-				log.Println(count)
+				//	log.Println(count)
 				if count > 0 {
 					log.Printf("Validated token for %s", r_username)
 					loginSuccess(w, r, r_id, r_username, r_groups)

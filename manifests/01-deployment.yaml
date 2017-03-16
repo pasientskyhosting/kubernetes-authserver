@@ -40,6 +40,13 @@ spec:
 
           - name: DB_NAME
             value: "auth"
+
+          - name: HTTP_PORT
+            value: "8087"
+
+          - name: HTTPS_PORT
+            value: "8088"
+
         ports:
           - containerPort: 8087
           - containerPort: 8088

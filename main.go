@@ -39,12 +39,12 @@ func init() {
 	var DB_HOST = flag.String("host", "127.0.0.1", "Database host")
 	var DB_PORT = flag.String("port", "3306", "Database port")
 	var DB_NAME = flag.String("db", "auth", "Database name")
-	var CERT = flag.String("cert", "/etc/ssl/tls.crt", "TLS cert path < /etc/ssl/tls.crt >")
-	var KEY = flag.String("key", "/etc/ssl/tls.key", "TLS key path < /etc/ssl/tls.key >")
-	var NO_HTTP = flag.Bool("http", true, "enable unsecure http on port 8081 usefull for debugging")
-	var NO_HTTPS = flag.Bool("https", true, "enable TLS on port 8088")
-	var UNSECUREPORT = flag.Int("http_port", 8087, "Unsecure HTTP port, default 8087")
-	var SECUREPORT = flag.Int("https_port", 8088, "Secure HTTPS port, default 8088")
+	var CERT = flag.String("cert", "/etc/ssl/tls.crt", "TLS cert path")
+	var KEY = flag.String("key", "/etc/ssl/tls.key", "TLS key path")
+	var NO_HTTP = flag.Bool("http", true, "Enable HTTP access")
+	var NO_HTTPS = flag.Bool("https", true, "Enable HTTPS access")
+	var UNSECUREPORT = flag.Int("http_port", 8087, "Unsecure HTTP port")
+	var SECUREPORT = flag.Int("https_port", 8088, "Secure HTTPS port")
 	flag.Parse()
 	DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + *DB_PORT + ")/" + *DB_NAME + "?charset=utf8"
 	OPT_HTTP = *NO_HTTP

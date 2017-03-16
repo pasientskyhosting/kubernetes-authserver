@@ -13,7 +13,7 @@ kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key 
 ```
 
 
-##The following environment variables are used at startup
+##The following environment variables are used at startup of the docker container.
 ####_DB_HOST_
 Mysql hostname  
 _Default: 127.0.0.1_
@@ -35,23 +35,7 @@ Mysql password
 _Default: auth_
 
 ##Database preparation
-```
-CREATE DATABASE auth CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-USE auth;
-
-CREATE TABLE `users` (
-  `id` int(6) NOT NULL AUTO_INCREMENT,
-  `token` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `uid` int(6) NOT NULL,
-  `groups` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `uid` (`uid`),
-  UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-```
+The sql/db-layout.sql contains the structure needed for authserver. It will create a DB named auth uppon importing.
 
 ##JSON Requests & responses
 ####Unsuccessfull request response
@@ -91,3 +75,33 @@ CREATE TABLE `users` (
   "details": "Invalid TokenReview ( Json decode failed )"
 }
 ```
+
+##Command line options for kubernetes-authserver
+###--host <string>
+DB hostname / ip, default 127.0.0.1
+
+###--port <string>
+DB host port, default 3306
+
+###--db <srtring>
+DB databasename, default 'auth'
+
+###--user <string>
+DB username, default 'auth'
+
+###--pass <string>
+DB password, default 'auth'
+
+###--tls <bool>
+Enable tls, default true
+Usefull to turn off if you don't have certificates and just want to do local testing
+
+###--unsecure <bool>
+Enable unsecure HTTP access, default false
+Usefull to turn on for debugging purposes
+
+###--cert <string>
+Path to TLS cert, default /etc/ssl/tls.crt
+
+###--key <string>
+Path to TLS private key, default /etc/ssl/tls.key

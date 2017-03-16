@@ -49,18 +49,16 @@ func randToken(len int) string {
 func main() {
 	db, err = sql.Open("mysql", DB_DSN)
 	checkErr(err)
-
-	defer db.Close()
-
 	checkErr(db.Ping())
 
 	S_TOKEN := randToken(32)
 	S_SALT := randToken(8)	
 	PW := GetPassword(S_TOKEN, []byte(S_SALT))
 	log.Printf("Username: %s",C_USERNAME)
-	log.Printf("Password String: %s$%s", S_SALT, S_TOKEN)
-	log.Printf("Base16: %x", PW)
+	log.Printf("Token: %s$%s", S_SALT, S_TOKEN)
+	//log.Printf("Base16: %x", PW)
 	_, err = db.Exec("UPDATE `users` SET token = ? where username = ? LIMIT 1", PW, C_USERNAME)
+  	defer db.Close()
   	checkErr(err)
 
 

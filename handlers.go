@@ -8,9 +8,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	//"golang.org/x/crypto/bcrypt"
-	//"strings"
-	//	"github.com/gorilla/mux"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -40,42 +37,46 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 			log.Println("Cannot reach database server!", err)
 		} else {
 			s := strings.Split(token.Spec.Token, "$")
-			theSalt, actuallToken := s[0], s[1]
-			TokenToCheck := GetPassword(actuallToken, []byte(theSalt))
-			//log.Printf("Salt: %s", theSalt)
-			//log.Printf("Token: %s", actuallToken)
-			//log.Printf("Hashed Token: %x", TokenToCheck)
-			rows, err := db.Query("SELECT users.id, users.username, groups.groupname FROM (auth.groups_mapping groups_mapping INNER JOIN auth.groups groups ON (groups_mapping.groupid = groups.id)) INNER JOIN auth.users users ON (groups_mapping.userid = users.id) WHERE BINARY (users.token = ?)", TokenToCheck)
-			checkErr(err)
-			defer rows.Close()
-			//			err := db.QueryRow("SELECT id, token, username, groups FROM `users` where token = ? LIMIT 1",
-			//				token.Spec.Token).Scan(&r_id, &r_token, &r_username, &r_uid, &r_groups)
-			if err == nil {
-				count := 0
-				for rows.Next() {
-					var uid int
-					var username string
-					var groupname string
-					err = rows.Scan(&uid, &username, &groupname)
-					checkErr(err)
-					//					fmt.Println(uid)
-					//					fmt.Println(username)
-					//					fmt.Println(groupname)
-					r_id = uid
-					r_username = username
-					r_groups = append(r_groups, groupname)
-					count += 1
-				}
-				//	log.Println(count)
-				if count > 0 {
-					log.Printf("Validated token for %s", r_username)
-					loginSuccess(w, r, r_id, r_username, r_groups)
+			if len(s) == 2 {
+				theSalt, actuallToken := s[0], s[1]
+				TokenToCheck := GetPassword(actuallToken, []byte(theSalt))
+				//log.Printf("Salt: %s", theSalt)
+				//log.Printf("Token: %s", actuallToken)
+				//log.Printf("Hashed Token: %x", TokenToCheck)
+				rows, err := db.Query("SELECT users.id, users.username, groups.groupname FROM (auth.groups_mapping groups_mapping INNER JOIN auth.groups groups ON (groups_mapping.groupid = groups.id)) INNER JOIN auth.users users ON (groups_mapping.userid = users.id) WHERE BINARY (users.token = ?)", TokenToCheck)
+				checkErr(err)
+				defer rows.Close()
+				if err == nil {
+					count := 0
+					for rows.Next() {
+						var uid int
+						var username string
+						var groupname string
+						err = rows.Scan(&uid, &username, &groupname)
+						checkErr(err)
+						//					fmt.Println(uid)
+						//					fmt.Println(username)
+						//					fmt.Println(groupname)
+						r_id = uid
+						r_username = username
+						r_groups = append(r_groups, groupname)
+						count += 1
+					}
+					//	log.Println(count)
+					if count > 0 {
+						log.Printf("Validated token for %s", r_username)
+						loginSuccess(w, r, r_id, r_username, r_groups)
+					} else {
+						log.Println("Invalid token received")
+						invalidLogin(w, r)
+					}
 				} else {
-					log.Println("Invalid token received")
+					log.Printf("DB Error: %s", err)
 					invalidLogin(w, r)
 				}
+
 			} else {
-				log.Printf("DB Error: %s", err)
+				log.Println("Invalid token received (cannot split)")
 				invalidLogin(w, r)
 			}
 		}

@@ -19,7 +19,7 @@ const APIVERSION = "authentication.k8s.io/v1beta1"
 var db *sql.DB
 var err error
 var DB_DSN string
-var OPT_TLS bool
+var OPT_HTTPS bool
 var OPT_HTTP bool
 var OPT_CERT string
 var OPT_KEY string
@@ -41,14 +41,14 @@ func init() {
 	var DB_NAME = flag.String("db", "auth", "Database name")
 	var CERT = flag.String("cert", "/etc/ssl/tls.crt", "TLS cert path < /etc/ssl/tls.crt >")
 	var KEY = flag.String("key", "/etc/ssl/tls.key", "TLS key path < /etc/ssl/tls.key >")
-	var NO_HTTP = flag.Bool("unsecure", false, "enable unsecure http on port 8081 usefull for debugging")
-	var NO_TLS = flag.Bool("tls", true, "enable TLS on port 8088")
-	var UNSECUREPORT = flag.Int("unsecureport", 8087, "Unsecure HTTP port, default 8087")
-	var SECUREPORT = flag.Int("secureport", 8088, "Secure HTTPS port, default 8088")
+	var NO_HTTP = flag.Bool("http", true, "enable unsecure http on port 8081 usefull for debugging")
+	var NO_HTTPS = flag.Bool("https", true, "enable TLS on port 8088")
+	var UNSECUREPORT = flag.Int("http_port", 8087, "Unsecure HTTP port, default 8087")
+	var SECUREPORT = flag.Int("https_port", 8088, "Secure HTTPS port, default 8088")
 	flag.Parse()
 	DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + *DB_PORT + ")/" + *DB_NAME + "?charset=utf8"
 	OPT_HTTP = *NO_HTTP
-	OPT_TLS = *NO_TLS
+	OPT_HTTPS = *NO_HTTPS
 	OPT_CERT = *CERT
 	OPT_KEY = *KEY
 	OPT_SECUREPORT = *SECUREPORT
@@ -84,7 +84,7 @@ func main() {
 		}()
 	}
 
-	if OPT_TLS {
+	if OPT_HTTPS {
 		// Starting HTTPS server
 		go func() {
 			log.Printf("Staring HTTPS service on %d", OPT_SECUREPORT)

@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const VERSION = "0.3.6-pryingeye"
+const VERSION = "0.3.7-eyeofsauron"
 const DEBUG = true
 const APIVERSION = "authentication.k8s.io/v1beta1"
 
@@ -25,6 +25,7 @@ var OPT_CERT string
 var OPT_KEY string
 var OPT_UNSECUREPORT int
 var OPT_SECUREPORT int
+var OPT_DEBUG bool
 
 func checkErr(err error) {
 	if err != nil {
@@ -33,27 +34,29 @@ func checkErr(err error) {
 }
 
 func init() {
-	log.Println("Starting kubernetes-authserver", VERSION)
 	var DB_USER = flag.String("user", "auth", "Database user")
 	var DB_PASS = flag.String("pass", "auth", "Database user")
 	var DB_HOST = flag.String("host", "127.0.0.1", "Database host")
-	var DB_PORT = flag.String("port", "3306", "Database port")
+	var DB_PORT = flag.Int("port", 3306, "Database port")
 	var DB_NAME = flag.String("db", "auth", "Database name")
+	var DB_CHARSET = flag.String("charset", "utf8", "Database charset for DSN")
 	var CERT = flag.String("cert", "/etc/ssl/tls.crt", "TLS cert path")
 	var KEY = flag.String("key", "/etc/ssl/tls.key", "TLS key path")
 	var NO_HTTP = flag.Bool("http", true, "Enable HTTP access")
 	var NO_HTTPS = flag.Bool("https", true, "Enable HTTPS access")
 	var UNSECUREPORT = flag.Int("http_port", 8087, "Unsecure HTTP port")
 	var SECUREPORT = flag.Int("https_port", 8088, "Secure HTTPS port")
+	var DEBUG = flag.Bool("debug", false, "Enable debugging output")
 	flag.Parse()
-	DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + *DB_PORT + ")/" + *DB_NAME + "?charset=utf8"
+	DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + strconv.Itoa(*DB_PORT) + ")/" + *DB_NAME + "?charset=" + *DB_CHARSET
 	OPT_HTTP = *NO_HTTP
 	OPT_HTTPS = *NO_HTTPS
 	OPT_CERT = *CERT
 	OPT_KEY = *KEY
 	OPT_SECUREPORT = *SECUREPORT
 	OPT_UNSECUREPORT = *UNSECUREPORT
-	log.Printf("DB DSN: %s:****@(%s:%s)/%s?charset=utf8", *DB_USER, *DB_HOST, *DB_PORT, *DB_NAME)
+	OPT_DEBUG = *DEBUG
+	log.Printf("DB DSN: %s:*****@(%s:%d)/%s?charset=%s", *DB_USER, *DB_HOST, *DB_PORT, *DB_NAME, *DB_CHARSET)
 }
 
 func startDBPolling() {
@@ -67,6 +70,8 @@ func startDBPolling() {
 }
 
 func main() {
+	log.Println("Starting kubernetes-authserver", VERSION)
+
 	errs := make(chan error)
 	router := NewRouter()
 	db, err = sql.Open("mysql", DB_DSN)

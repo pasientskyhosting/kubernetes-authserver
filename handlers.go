@@ -29,43 +29,43 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	}
 	err = json.Unmarshal(body, &token)
 	if err != nil {
+		log.Printf("Got invalid TokenReview (Json decode failed: %s)", err)
 		reqInvalid(w, r)
-		log.Println("Got invalid TokenReview (Json decode fail)")
 	} else {
 		err := db.Ping()
 		if err != nil {
-			log.Println("Cannot reach database server!", err)
+			log.Printf("DB Error: %s", err)
 			invalidLogin(w, r)
 		} else {
 			s := strings.Split(token.Spec.Token, "$")
 			if len(s) == 2 {
 				theSalt, actuallToken := s[0], s[1]
 				TokenToCheck := GetPassword(actuallToken, []byte(theSalt))
-				//log.Printf("Salt: %s", theSalt)
-				//log.Printf("Token: %s", actuallToken)
-				//log.Printf("Hashed Token: %x", TokenToCheck)
+				if OPT_DEBUG {
+					log.Printf("Received auth request:\n\t\t\tSalt: %s\n\t\t\tToken: %s\n\t\t\tBase16 of Scrypt hash: %x", theSalt, actuallToken, TokenToCheck)
+				}
 				rows, err := db.Query("SELECT users.id, users.username, groups.groupname FROM (auth.groups_mapping groups_mapping INNER JOIN auth.groups groups ON (groups_mapping.groupid = groups.id)) INNER JOIN auth.users users ON (groups_mapping.userid = users.id) WHERE BINARY (users.token = ?)", TokenToCheck)
 				checkErr(err)
 				defer rows.Close()
 				if err == nil {
 					count := 0
-					for rows.Next() {
+					for rows.Next() {	
 						var uid int
 						var username string
 						var groupname string
 						err = rows.Scan(&uid, &username, &groupname)
 						checkErr(err)
-						//					fmt.Println(uid)
-						//					fmt.Println(username)
-						//					fmt.Println(groupname)
+						if OPT_DEBUG {
+							log.Printf("Uid: %d Username: %s Groupname: %s", uid, username, groupname)
+						}
 						r_id = uid
 						r_username = username
 						r_groups = append(r_groups, groupname)
 						count += 1
 					}
-					//	log.Println(count)
+					if OPT_DEBUG { log.Printf("Groups found for user %s: %d", r_username, count) }
 					if count > 0 {
-						log.Printf("Validated token for %s", r_username)
+						log.Printf("Validated token for user %s", r_username)
 						loginSuccess(w, r, r_id, r_username, r_groups)
 					} else {
 						log.Println("Invalid token received")
@@ -162,5 +162,5 @@ func Authz(w http.ResponseWriter, r *http.Request) {
 func Healthz(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "418 I'm a Teapot")
+	fmt.Fprint(w, "418 I'm a Teapot\n")
 }

@@ -1,9 +1,9 @@
-#Kubernetes webhook token authenticationserver
+# Kubernetes webhook token authenticationserver
 Simple lightweigh & database backed authserver written in GOLANG to be used with webhook token authentication mode in Kubernetes
 
 More info about webhook token authentication [here](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
 
-##Preparations
+## Preparations
 
 *Generate SSL Certificates
 
@@ -13,32 +13,32 @@ kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key 
 ```
 
 
-##The following environment variables are used at startup of the docker container.
-####_DB_HOST_
+## The following environment variables are used at startup of the docker container.
+#### _DB_HOST_
 Mysql hostname  
 _Default: 127.0.0.1_
 
-####_DB_PORT_
+#### _DB_PORT_
 Mysql port  
 _Default: 3306_
 
-####_DB_NAME_
+#### _DB_NAME_
 Mysql DB name  
 _Default: auth_
 
-####_DB_USER_
+#### _DB_USER_
 Mysql username  
 _Default: auth_
 
-####_DB_PASS_
+#### _DB_PASS_
 Mysql password  
 _Default: auth_
 
-##Database preparation
+## Database preparation
 The sql/db-layout.sql contains the structure needed for authserver. It will create a DB named auth uppon importing.
 
-##JSON Requests & responses
-####Unsuccessfull request response
+## JSON Requests & responses
+#### Unsuccessfull request response
 ```
 {
   "apiVersion": "authentication.k8s.io/v1beta1",
@@ -49,7 +49,7 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 }
 ```
 
-####Successfull response example
+#### Successfull response example
 ```
 {
   "apiVersion": "authentication.k8s.io/v1beta1",
@@ -68,7 +68,7 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 }
 ```
 
-####Faulty request ( Json check failed )
+#### Faulty request ( Json check failed )
 ```
 {
   "status": "400",
@@ -76,41 +76,42 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 }
 ```
 
-##Command line options for kubernetes-authserver
-###--host <string>
+## Command line options for kubernetes-authserver
+### --host <string>
 DB hostname / ip, default 127.0.0.1
 
-###--port <string>
+### --port <int>
 DB host port, default 3306
 
-###--db <srtring>
+### --db <srtring>
 DB databasename, default 'auth'
 
-###--user <string>
+### --user <string>
 DB username, default 'auth'
 
-###--pass <string>
+### --pass <string>
 DB password, default 'auth'
 
-###--tls <bool>
-Enable tls, default true
-Usefull to turn off if you don't have certificates and just want to do local testing
+### --charset <string>
+DB charset, defaut 'utf8'
 
-###--unsecure <bool>
-Enable unsecure HTTP access, default false
-Usefull to turn on for debugging purposes
+### --https <bool>
+Enable HTTPS access, default true
 
-###--cert <string>
+### --http <bool>
+Enable HTTP access, default true
+
+### --cert <string>
 Path to TLS cert, default /etc/ssl/tls.crt
 
-###--key <string>
+### --key <string>
 Path to TLS private key, default /etc/ssl/tls.key
 
 
-##utilities/tokengen.go
+## utilities/tokengen.go
 This is a small utility to generate auth tokens for use with the system.
 It's very basic at the moment a example to run it is:
 
-go run tokengen.go --host=192.168.2.62 --db=auth --user=root --pass=haxx --username=jk
+go run tokengen.go --host=192.168.2.62 --db=auth --user=auth --pass=auth --username=jk
 
 More work is needed on this, alternativly a admin UI will be introduced.

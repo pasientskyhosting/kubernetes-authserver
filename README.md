@@ -25,25 +25,29 @@ kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key 
 ```
 
 ## The following environment variables are used at startup of the docker container.
-### _DB_HOST_
+### DB_HOST <string>
 Mysql hostname  
-*Default: 127.0.0.1*
+**Default: 127.0.0.1**
 
-### _DB_PORT_
+### DB_PORT <int>
 Mysql port  
-*Default: 3306*
+**Default: 3306**
 
-### _DB_NAME_
+### DB_NAME <string>
 Mysql DB name  
-*Default: auth*
+**Default: auth**
 
-### _DB_USER_
+### DB_USER <string>
 Mysql username  
-*Default: auth*
+**Default: auth**
 
-### _DB_PASS_
+### DB_PASS <string>
 Mysql password  
-*Default: auth*
+**Default: auth**
+
+### DB_CHARSET <bool>
+Charset to use for database
+**Default: utf8**
 
 ## Database preparation
 The sql/db-layout.sql contains the structure needed for authserver. It will create a DB named auth uppon importing.
@@ -89,34 +93,44 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 
 ## Command line options for kubernetes-authserver
 ### --host <string>
-DB hostname / ip, default 127.0.0.1
+DB hostname / ip
+**default: 127.0.0.1**
 
 ### --port <int>
-DB host port, default 3306
+DB host port
+**default: 3306**
 
 ### --db <srtring>
-DB databasename, default 'auth'
+DB databasename
+**default auth**
 
 ### --user <string>
-DB username, default 'auth'
+DB username
+**default: auth**
 
 ### --pass <string>
-DB password, default 'auth'
+DB password
+**default: auth**
 
 ### --charset <string>
-DB charset, defaut 'utf8'
+DB charset
+**default: utf8**
 
 ### --https <bool>
-Enable HTTPS access, default true
+Enable HTTPS access
+**default: true**
 
 ### --http <bool>
-Enable HTTP access, default true
+Enable HTTP access
+**default: true**
 
 ### --cert <string>
-Path to TLS cert, default /etc/ssl/tls.crt
+Path to TLS cert
+**default: /etc/ssl/tls.crt**
 
 ### --key <string>
-Path to TLS private key, default /etc/ssl/tls.key
+Path to TLS private key
+**default: /etc/ssl/tls.key**
 
 ## utilities/tokengen.go
 This is a small utility to generate auth tokens for use with the system.

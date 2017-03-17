@@ -24,6 +24,25 @@ A TLS secret is needed with the server certificates as kubernetes-authserver rea
 kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key --namespace kube-system
 ```
 
+### Creating users and groups
+At the moment this has to be done manually then the tokengen utility is ran against the database to generate a token.
+
+The tokens are saved in scrypt encrypted format in the database, meaning if you loose your token it's impossible to recover it and a new one has to be generated.
+
+#### Creating the user
+Start with inserting a user with empty token into the users table.
+
+#### Creating groups
+Create groups in the groups table
+
+#### Mapping users to groups
+The groups_mapping table contains the user to groups mappings.
+Insert rows mapping userid to groupid
+
+#### Assigning a token to a user
+See the section regarding tokengen further down.
+A admin UI to easier administrate this will probably be introduced in the future.
+
 ## The following environment variables are used at startup of the docker container.
 ### DB_HOST <string>
 Mysql hostname  
@@ -46,7 +65,7 @@ Mysql password
 **Default: auth**
 
 ### DB_CHARSET <bool>
-Charset to use for database
+Charset to use for database  
 **Default: utf8**
 
 ## Database preparation
@@ -93,43 +112,43 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 
 ## Command line options for kubernetes-authserver
 ### --host <string>
-DB hostname / ip
+DB hostname / ip  
 **default: 127.0.0.1**
 
 ### --port <int>
-DB host port
+DB host port  
 **default: 3306**
 
 ### --db <srtring>
-DB databasename
+DB databasename  
 **default auth**
 
 ### --user <string>
-DB username
+DB username  
 **default: auth**
 
 ### --pass <string>
-DB password
+DB password  
 **default: auth**
 
 ### --charset <string>
-DB charset
+DB charset  
 **default: utf8**
 
 ### --https <bool>
-Enable HTTPS access
+Enable HTTPS access  
 **default: true**
 
 ### --http <bool>
-Enable HTTP access
+Enable HTTP access  
 **default: true**
 
 ### --cert <string>
-Path to TLS cert
+Path to TLS cert  
 **default: /etc/ssl/tls.crt**
 
 ### --key <string>
-Path to TLS private key
+Path to TLS private key  
 **default: /etc/ssl/tls.key**
 
 ## utilities/tokengen.go
@@ -137,5 +156,35 @@ This is a small utility to generate auth tokens for use with the system.
 It's very basic at the moment a example to run it is:
 
 go run tokengen.go --host=192.168.2.62 --db=auth --user=auth --pass=auth --username=jk
+
+Output will look like
+
+```
+2017/03/16 12:30:17 Username: jk
+2017/03/16 12:30:17 Token: v864d329d5c8b9aw$ff1b4e4107fnd728b8169c3d89kdoebbb81933f32b09f4216211934895acea77
+```
+the token is copied into your kubectl config
+
+*Example*
+```
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: ca.pem
+    server: https://10.10.10.10
+  name: ps-dev
+contexts:
+- context:
+    cluster: ps-dev
+    user: default
+  name: default-system
+current-context: default-system
+kind: Config
+preferences: {}
+users:
+- name: default
+  user:
+    token: "v864d329d5c8b9aw$ff1b4e4107fnd728b8169c3d89kdoebbb81933f32b09f4216211934895acea77"
+```
 
 More work is needed on this, alternativly a admin UI will be introduced.

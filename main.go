@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const VERSION = "0.3.5-pryingeye"
+const VERSION = "0.3.6-pryingeye"
 const DEBUG = true
 const APIVERSION = "authentication.k8s.io/v1beta1"
 

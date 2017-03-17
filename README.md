@@ -105,3 +105,12 @@ Path to TLS cert, default /etc/ssl/tls.crt
 
 ###--key <string>
 Path to TLS private key, default /etc/ssl/tls.key
+
+
+##utilities/tokengen.go
+This is a small utility to generate auth tokens for use with the system.
+It's very basic at the moment a example to run it is:
+
+go run tokengen.go --host=192.168.2.62 --db=auth --user=root --pass=haxx --username=jk
+
+More work is needed on this, alternativly a admin UI will be introduced.

@@ -35,6 +35,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		err := db.Ping()
 		if err != nil {
 			log.Println("Cannot reach database server!", err)
+			invalidLogin(w, r)
 		} else {
 			s := strings.Split(token.Spec.Token, "$")
 			if len(s) == 2 {

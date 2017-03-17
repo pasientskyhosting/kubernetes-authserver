@@ -3,6 +3,8 @@ Simple lightweigh & database backed authserver written in GOLANG to be used with
 
 More info about webhook token authentication [here](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
 
+*This project is under heavy development and is not production ready*
+
 ## Preparations
 
 *Generate SSL Certificates

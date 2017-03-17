@@ -3,44 +3,53 @@ Simple lightweigh & database backed authserver written in GOLANG to be used with
 
 More info about webhook token authentication [here](https://kubernetes.io/docs/admin/authentication/#webhook-token-authentication)
 
-*This project is under heavy development and is not production ready*
+**This project is under heavy development and is not production ready**
 
 ## Preparations
 
-*Generate SSL Certificates
+### Generate SSL Certificates
+Provided in the SSL folder is some scripts to help you generate the certificates needed.
 
-*Create TLS secret
+Copy your ca.pem from your existing cluster into the SSL folder and run authserver.sh & authserver_client.sh to generate certificates valid for 10 years.
+
+If you wish to have shorter validity. feel free to modify the scripts.
+
+Also if you plan to use a different service ip for the authserver update *openssl.cnf*
+
+### Create TLS secret
+
+A TLS secret is needed with the server certificates as kubernetes-authserver reads the certs from a volumeMount.
+
 ```
 kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key --namespace kube-system
 ```
 
-
 ## The following environment variables are used at startup of the docker container.
-#### _DB_HOST_
+### _DB_HOST_
 Mysql hostname  
-_Default: 127.0.0.1_
+*Default: 127.0.0.1*
 
-#### _DB_PORT_
+### _DB_PORT_
 Mysql port  
-_Default: 3306_
+*Default: 3306*
 
-#### _DB_NAME_
+### _DB_NAME_
 Mysql DB name  
-_Default: auth_
+*Default: auth*
 
-#### _DB_USER_
+### _DB_USER_
 Mysql username  
-_Default: auth_
+*Default: auth*
 
-#### _DB_PASS_
+### _DB_PASS_
 Mysql password  
-_Default: auth_
+*Default: auth*
 
 ## Database preparation
 The sql/db-layout.sql contains the structure needed for authserver. It will create a DB named auth uppon importing.
 
 ## JSON Requests & responses
-#### Unsuccessfull request response
+### Unsuccessfull request response
 ```
 {
   "apiVersion": "authentication.k8s.io/v1beta1",
@@ -51,7 +60,7 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 }
 ```
 
-#### Successfull response example
+### Successfull response example
 ```
 {
   "apiVersion": "authentication.k8s.io/v1beta1",
@@ -70,7 +79,7 @@ The sql/db-layout.sql contains the structure needed for authserver. It will crea
 }
 ```
 
-#### Faulty request ( Json check failed )
+### Faulty request ( Json check failed )
 ```
 {
   "status": "400",
@@ -108,7 +117,6 @@ Path to TLS cert, default /etc/ssl/tls.crt
 
 ### --key <string>
 Path to TLS private key, default /etc/ssl/tls.key
-
 
 ## utilities/tokengen.go
 This is a small utility to generate auth tokens for use with the system.

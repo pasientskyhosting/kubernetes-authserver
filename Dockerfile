@@ -2,7 +2,7 @@ FROM alpine:3.5
 
 LABEL maintainer "Joakim Karlsson <jk@patientsky.com>"
 
-#RUN apk add --no-cache mysql-client
+RUN apk add --no-cache su-exec
 ADD kubernetes-authserver /kubernetes-authserver
 ADD scripts/entrypoint.sh /entrypoint.sh
 

@@ -151,7 +151,7 @@ Path to TLS cert
 Path to TLS private key  
 **default: /etc/ssl/tls.key**
 
-## utilities/tokengen.go
+# utilities/tokengen.go
 This is a small utility to generate auth tokens for use with the system.
 It's very basic at the moment a example to run it is:
 
@@ -163,19 +163,19 @@ Output will look like
 2017/03/16 12:30:17 Username: jk
 2017/03/16 12:30:17 Token: v864d329d5c8b9aw$ff1b4e4107fnd728b8169c3d89kdoebbb81933f32b09f4216211934895acea77
 ```
-the token is copied into your kubectl config
+the token is copied into your kubectl config usually located in ~/.kube/config
 
-*Example*
+*Example:*
 ```
 apiVersion: v1
 clusters:
 - cluster:
     certificate-authority: ca.pem
     server: https://10.10.10.10
-  name: ps-dev
+  name: default-cluster
 contexts:
 - context:
-    cluster: ps-dev
+    cluster: default-cluster
     user: default
   name: default-system
 current-context: default-system

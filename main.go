@@ -12,20 +12,36 @@ import (
 	"time"
 )
 
-const VERSION = "0.3.7-eyeofsauron"
-const DEBUG = true
-const APIVERSION = "authentication.k8s.io/v1beta1"
+const (
+	VERSION    = "0.3.9-warlock"
+	APIVERSION = "authentication.k8s.io/v1beta1"
+)
 
-var db *sql.DB
-var err error
-var DB_DSN string
-var OPT_HTTPS bool
-var OPT_HTTP bool
-var OPT_CERT string
-var OPT_KEY string
-var OPT_UNSECUREPORT int
-var OPT_SECUREPORT int
-var OPT_DEBUG bool
+var (
+	CERT             = flag.String("cert", "/etc/ssl/tls.crt", "TLS cert path")
+	db               *sql.DB
+	DB_CHARSET       = flag.String("charset", "utf8", "Database charset for DSN")
+	DB_DSN           string
+	DB_HOST          = flag.String("host", "127.0.0.1", "Database host")
+	DB_NAME          = flag.String("db", "auth", "Database name")
+	DB_PASS          = flag.String("pass", "auth", "Database user")
+	DB_PORT          = flag.Int("port", 3306, "Database port")
+	DB_USER          = flag.String("user", "auth", "Database user")
+	DEBUG            = flag.Bool("debug", false, "Enable debugging output")
+	err              error
+	KEY              = flag.String("key", "/etc/ssl/tls.key", "TLS key path")
+	NO_HTTP          = flag.Bool("http", true, "Enable HTTP access")
+	NO_HTTPS         = flag.Bool("https", true, "Enable HTTPS access")
+	OPT_CERT         string
+	OPT_DEBUG        bool
+	OPT_HTTP         bool
+	OPT_HTTPS        bool
+	OPT_KEY          string
+	OPT_SECUREPORT   int
+	OPT_UNSECUREPORT int
+	SECUREPORT       = flag.Int("https_port", 8088, "Secure HTTPS port")
+	UNSECUREPORT     = flag.Int("http_port", 8087, "Unsecure HTTP port")
+)
 
 func checkErr(err error) {
 	if err != nil {
@@ -34,20 +50,28 @@ func checkErr(err error) {
 }
 
 func init() {
-	var DB_USER = flag.String("user", "auth", "Database user")
-	var DB_PASS = flag.String("pass", "auth", "Database user")
-	var DB_HOST = flag.String("host", "127.0.0.1", "Database host")
-	var DB_PORT = flag.Int("port", 3306, "Database port")
-	var DB_NAME = flag.String("db", "auth", "Database name")
-	var DB_CHARSET = flag.String("charset", "utf8", "Database charset for DSN")
-	var CERT = flag.String("cert", "/etc/ssl/tls.crt", "TLS cert path")
-	var KEY = flag.String("key", "/etc/ssl/tls.key", "TLS key path")
-	var NO_HTTP = flag.Bool("http", true, "Enable HTTP access")
-	var NO_HTTPS = flag.Bool("https", true, "Enable HTTPS access")
-	var UNSECUREPORT = flag.Int("http_port", 8087, "Unsecure HTTP port")
-	var SECUREPORT = flag.Int("https_port", 8088, "Secure HTTPS port")
-	var DEBUG = flag.Bool("debug", false, "Enable debugging output")
 	flag.Parse()
+
+	if DB_HOST == "" {
+		log.Fatal("Empty ENV: DB_HOST")
+	}
+
+	if DB_PORT == "" {
+		log.Fatal("Empty ENV: DB_PORT")
+	}
+
+	if DB_NAME == "" {
+		log.Fatal("Empty ENV: DB_NAME")
+	}
+
+	if DB_USER == "" {
+		log.Fatal("Empty ENV: DB_USER")
+	}
+
+	if DB_PASS == "" {
+		log.Fatal("Empty ENV: DB_PASS")
+	}
+
 	DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + strconv.Itoa(*DB_PORT) + ")/" + *DB_NAME + "?charset=" + *DB_CHARSET
 	OPT_HTTP = *NO_HTTP
 	OPT_HTTPS = *NO_HTTPS

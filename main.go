@@ -51,26 +51,27 @@ func checkErr(err error) {
 
 func init() {
 	flag.Parse()
+	/*
+		if *DB_HOST == "" {
+			log.Fatal("Empty ENV: DB_HOST")
+		}
 
-	if DB_HOST == "" {
-		log.Fatal("Empty ENV: DB_HOST")
-	}
+		if *DB_PORT == "" {
+			log.Fatal("Empty ENV: DB_PORT")
+		}
 
-	if DB_PORT == "" {
-		log.Fatal("Empty ENV: DB_PORT")
-	}
+		if *DB_NAME == "" {
+			log.Fatal("Empty ENV: DB_NAME")
+		}
 
-	if DB_NAME == "" {
-		log.Fatal("Empty ENV: DB_NAME")
-	}
+		if *DB_USER == "" {
+			log.Fatal("Empty ENV: DB_USER")
+		}
 
-	if DB_USER == "" {
-		log.Fatal("Empty ENV: DB_USER")
-	}
-
-	if DB_PASS == "" {
-		log.Fatal("Empty ENV: DB_PASS")
-	}
+		if *DB_PASS == "" {
+			log.Fatal("Empty ENV: DB_PASS")
+		}
+	*/
 
 	DB_DSN = *DB_USER + ":" + *DB_PASS + "@(" + *DB_HOST + ":" + strconv.Itoa(*DB_PORT) + ")/" + *DB_NAME + "?charset=" + *DB_CHARSET
 	OPT_HTTP = *NO_HTTP

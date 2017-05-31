@@ -24,24 +24,54 @@ A TLS secret is needed with the server certificates as kubernetes-authserver rea
 kubectl create secret tls authserver --cert=authserver.pem --key=authserver.key --namespace kube-system
 ```
 
-### Creating users and groups
-At the moment this has to be done manually then the tokengen utility is ran against the database to generate a token.
+### Authadm
+Usage:
+  add
+    user <username>
+    group <groupname>
 
-The tokens are saved in scrypt encrypted format in the database, meaning if you loose your token it's impossible to recover it and a new one has to be generated.
+  del
+    user <username>
+    group <groupname>
 
-#### Creating the user
-Start with inserting a user with empty token into the users table.
+  group
+    add <username> <groupname>
+    del <username> <groupname>
 
-#### Creating groups
-Create groups in the groups table
+  list <users/groups>
+    Lists users or groups in db
 
-#### Mapping users to groups
-The groups_mapping table contains the user to groups mappings.
-Insert rows mapping userid to groupid
+  token <username>
+    Generates a token for given username
 
-#### Assigning a token to a user
-See the section regarding tokengen further down.
-A admin UI to easier administrate this will probably be introduced in the future.
+### Creating users, groups & tokens
+open sh to the kubernetes-authserver, f.x kubectl exec --namespace kube-system kubernetes-authserver-905870594-fdjw6 -ti sh
+
+Use 'kubectl describe pod/kubernetes-authserver-905870594-fdjw6' to see all of the containers in this pod.
+/ # authadm list
+1:ak:admin,devel,deployment
+2:deploy:deployment
+
+/ # authadm add user jk
+2017/05/30 08:45:55 Created user "jk" with id: 28
+
+/ # authadm list groups
+1:admin
+3:deployment
+2:devel
+12:test
+
+/ # authadm group add jk admin
+2017/05/30 08:46:17 Added "jk" to "admin"
+
+/ # authadm list
+1:ak:admin,devel,deployment
+2:deploy:deployment
+28:jk:admin
+
+/ # authadm token jk
+7e2a9c77c3f9136e$d8a17de58429884fe83417ffe284c862e829f4f8e4ccbbb9eab211cb869ea238
+
 
 ## The following environment variables are used at startup of the docker container.
 ### DB_HOST <string>
